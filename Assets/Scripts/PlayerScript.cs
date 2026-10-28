@@ -22,6 +22,10 @@ public class PlayerScript : MonoBehaviour
     
     //This is how many points we currently have
     public int Score = 0;
+
+    public float jumpForce = 5;
+    private bool jump;
+    public bool OnGround = false;
     
     //Start automatically gets triggered once when the objects turns on/the game starts
     void Start()
@@ -50,19 +54,20 @@ public class PlayerScript : MonoBehaviour
         {
             vel.x = -Speed;
         }
-        //If I hold the up arrow, the player should move up. . .
-        if (Keyboard.current.upArrowKey.isPressed)
+        if (jump)
         {
-            vel.y = Speed;
-        }
-        //If I hold the down arrow, the player should move down. . .
-        if (Keyboard.current.downArrowKey.isPressed)
-        {
-            vel.y = -Speed;
+            RB.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
+            jump= false;
         }
         
         //Finally, I take that variable and I feed it to the component in charge of movement
-        RB.linearVelocity = vel;
+        RB.linearVelocity = new Vector2(vel.x, RB.linearVelocity.y);
+
+        if (Keyboard.current.upArrowKey.wasPressedThisFrame)
+        {
+            OnGround = true;
+            jump = true;
+        }
     }
 
     //This gets called whenever you bump into another object, like a wall or coin.
