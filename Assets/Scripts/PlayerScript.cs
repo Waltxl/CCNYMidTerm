@@ -23,7 +23,7 @@ public class PlayerScript : MonoBehaviour
     //This is how many points we currently have
     public int Score = 0;
 
-    public float jumpForce = 5;
+    public float jumpForce = 6;
     private bool jump;
     public bool OnGround = false;
     public int maxJumps = 2;
@@ -65,17 +65,11 @@ public class PlayerScript : MonoBehaviour
         if (jump)
         {
             RB.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
-            jump= false;
+            jump = false;
         }
         
         //Finally, I take that variable and I feed it to the component in charge of movement
         RB.linearVelocity = new Vector2(vel.x, RB.linearVelocity.y);
-
-        if (Keyboard.current.upArrowKey.wasPressedThisFrame)
-        {
-            OnGround = true;
-            jump = true;
-        }
     }
 
     //This gets called whenever you bump into another object, like a wall or coin.
