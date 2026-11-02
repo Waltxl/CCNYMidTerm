@@ -26,12 +26,15 @@ public class PlayerScript : MonoBehaviour
     public float jumpForce = 5;
     private bool jump;
     public bool OnGround = false;
-    
+    public int maxJumps = 2;
+    public int jumpsRemaining;
+
     //Start automatically gets triggered once when the objects turns on/the game starts
     void Start()
     {
         //During setup we call UpdateScore to make sure our score text looks correct
         UpdateScore();
+        jumpsRemaining = maxJumps;
     }
 
     //Update is a lot like Start, but it automatically gets triggered once per frame
@@ -49,10 +52,15 @@ public class PlayerScript : MonoBehaviour
         {
             vel.x = Speed;
         }
-        //If I hold the left arrow, the player should move left. . .
         if (Keyboard.current.leftArrowKey.isPressed)
         {
             vel.x = -Speed;
+        }
+        //If I hold the left arrow, the player should move left. . .
+        if (Keyboard.current.upArrowKey.wasPressedThisFrame && jumpsRemaining > 0)
+        {
+            jump = true;
+            jumpsRemaining--;
         }
         if (jump)
         {
@@ -80,7 +88,11 @@ public class PlayerScript : MonoBehaviour
             //Run your 'you lose' function!
             Die();
         }
-        
+        if (other.gameObject.CompareTag("Ground"))
+        {
+            jumpsRemaining = maxJumps;
+        }
+
         //This checks to see if the thing you bumped into has the CoinScript script on it
         CoinScript coin = other.gameObject.GetComponent<CoinScript>();
         //If it does, run the code block belows
